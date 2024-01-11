@@ -7,6 +7,7 @@ import './tin_moi.dart';
 import './tin_nong.dart';
 import './video.dart';
 import './tin_bong_da.dart';
+import 'chan_trang.dart';
 class TrangChu extends StatefulWidget {
   const TrangChu({super.key});
 
@@ -16,28 +17,11 @@ class TrangChu extends StatefulWidget {
 
 class _TrangChuState extends State<TrangChu> {
   // Khai báo biến 
-  int page_index = 0;
   int dem = 0;
   late DateTime cur;
   late String thu;
 
-  // Danh cách các trang chức năng
-  List<Widget> _pageCN =  [
-    Video(),
-  ];
-  // Xử lý sự kiện onTap chuyển trang 
-  void onItemPage(int index){
-    setState(() {
-      page_index = index;
-    });
-
-    if(index == 0){
-      Navigator.push(this.context,MaterialPageRoute(builder: (context) => TrangChu()));
-    }
-    else if(index == 1){
-      Navigator.push(this.context,MaterialPageRoute(builder: (context) => Video()));
-    }
-  }
+  
   @override
   void initState() {
     super.initState();
@@ -159,34 +143,7 @@ class _TrangChuState extends State<TrangChu> {
               Tin_Bong_Da()
             ],
           ),
-          bottomNavigationBar: BottomNavigationBar(
-            fixedColor: Colors.black,
-            type: BottomNavigationBarType.fixed,
-            selectedFontSize: 15,
-            unselectedFontSize: 12,
-            items: const[
-              BottomNavigationBarItem(
-                icon: Icon(Icons.newspaper),
-                label: "Tin Tức",
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.video_library_rounded),
-                label: "Video",
-                
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.trending_up),
-                label: "Xu Hướng",
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.settings),
-                label: "Tiện Ích",
-              )
-            ],
-            currentIndex: page_index,
-            onTap: onItemPage,
-            elevation: 5
-          ),
+          bottomNavigationBar: Chan_Trang()
         ));
   }
 }
