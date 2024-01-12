@@ -1,4 +1,6 @@
+import 'package:do_an_cuoi_ky/SignIn_SignUp_ChangePW/Dang_ky.dart';
 import 'package:do_an_cuoi_ky/SignIn_SignUp_ChangePW/Dang_nhap.dart';
+import 'package:do_an_cuoi_ky/SignIn_SignUp_ChangePW/Quen_mat_khau.dart';
 import 'package:do_an_cuoi_ky/Thong_tin_Tai_khoan.dart';
 import 'package:flutter/material.dart';
 
@@ -19,4 +21,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-

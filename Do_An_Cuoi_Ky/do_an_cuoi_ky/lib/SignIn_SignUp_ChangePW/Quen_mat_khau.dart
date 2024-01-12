@@ -20,6 +20,7 @@ class _ChangePasswordState extends State<ChangePassword> {
     var confirmPassNew = TextEditingController();
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.grey,
         title: const Text("Quên mật khẩu"),
         leading: IconButton(
             onPressed: () {
