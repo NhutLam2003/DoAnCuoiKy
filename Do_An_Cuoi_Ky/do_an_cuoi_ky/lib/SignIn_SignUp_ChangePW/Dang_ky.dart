@@ -1,4 +1,8 @@
+import 'package:do_an_cuoi_ky/SignIn_SignUp_ChangePW/Dang_nhap.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:email_validator/email_validator.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
@@ -9,19 +13,39 @@ class SignUp extends StatefulWidget {
 
 class _SignUpState extends State<SignUp> {
   final form_key = GlobalKey<FormState>();
+  TextEditingController username = TextEditingController();
+  TextEditingController email = TextEditingController();
+  TextEditingController password = TextEditingController();
+  TextEditingController confirmPassword = TextEditingController();
   String txt = "";
-  final fullname = TextEditingController();
-  final email = TextEditingController();
-  final password = TextEditingController();
-  final cfpassword = TextEditingController();
+  Future<void> registerWithEmailAndPassword(
+      String email, String password) async {
+    try {
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+    } catch (e) {
+      print("Lỗi đăng ký $e");
+    }
+  }
+
   bool obs = true;
+  void _showSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        duration: Duration(seconds: 3),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
         body: Form(
-          key: form_key,
           child: SingleChildScrollView(
             child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -47,7 +71,7 @@ class _SignUpState extends State<SignUp> {
                     margin: const EdgeInsets.only(top: 15),
                     padding: const EdgeInsets.symmetric(horizontal: 30),
                     child: TextFormField(
-                      controller: fullname,
+                      controller: username,
                       decoration: const InputDecoration(
                         suffixIcon: Icon(Icons.person),
                         border: OutlineInputBorder(
@@ -121,7 +145,7 @@ class _SignUpState extends State<SignUp> {
                     margin: const EdgeInsets.only(top: 15),
                     padding: const EdgeInsets.symmetric(horizontal: 30),
                     child: TextFormField(
-                      controller: cfpassword,
+                      controller: confirmPassword,
                       obscureText: obs,
                       decoration: InputDecoration(
                           border: OutlineInputBorder(
@@ -169,29 +193,17 @@ class _SignUpState extends State<SignUp> {
                     style:
                         ElevatedButton.styleFrom(shape: const CircleBorder()),
                     onPressed: () {
-                      if (form_key.currentState != null &&
-                          form_key.currentState!.validate()) {
-                        //   FirebaseAuth.instance
-                        //       .createUserWithEmailAndPassword(
-                        //           email: email.text, password: password.text)
-                        //       .then((value) {
-                        //     FirebaseAuth.instance.currentUser
-                        //         ?.updateDisplayName(fullname.text);
-                        //     DatabaseReference ref = FirebaseDatabase.instance.ref();
-                        //     ref.child("users").update({fullname.text: ""});
-                        //     print("Created new account");
-
-                        //     Navigator.push(
-                        //         context,
-                        //         MaterialPageRoute(
-                        //             builder: (context) => const SignIn()));
-                        //   }).onError((error, stackTrace) {
-                        //     print("Error ${error.toString()}");
-                        //   });
-                        // } else {
-                        //   setState(() {
-                        //     txt = "Please fill in all the fields";
-                        //   });
+                      if (password.text == confirmPassword.text) {
+                        if (password.text.length >= 6) {
+                          registerWithEmailAndPassword(
+                              email.text, password.text);
+                        
+                          Navigator.pop(context);
+                        } else {
+                          _showSnackBar("Mất khẩu phải 6 kí tự trở lên");
+                        }
+                      } else {
+                        _showSnackBar("Mất khẩu không khớp");
                       }
                     },
                     child: Container(
@@ -209,7 +221,7 @@ class _SignUpState extends State<SignUp> {
                       height: MediaQuery.of(context).size.height / 15,
                       child: const Center(
                         child: Text(
-                          "ĐĂNG NHẬP",
+                          "ĐĂNG KÝ",
                           style: TextStyle(
                               color: Colors.black,
                               fontSize: 20,

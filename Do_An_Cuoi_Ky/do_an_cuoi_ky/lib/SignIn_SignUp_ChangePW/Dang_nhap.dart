@@ -1,37 +1,51 @@
-//import 'package:firebase_auth/firebase_auth.dart';
+import 'package:do_an_cuoi_ky/Thong_tin_Tai_khoan.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 // import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter/material.dart';
+import 'Dang_ky.dart';
+import 'Quen_mat_khau.dart';
 
 class SignIn extends StatefulWidget {
   const SignIn({super.key});
-  static String pass = "";
   @override
   State<SignIn> createState() => _SignInState();
 }
 
 class _SignInState extends State<SignIn> {
-  // Future<UserCredential> signInWithGoogle() async {
-  //   final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-  //   final GoogleSignInAuthentication? googleAuth =
-  //       await googleUser?.authentication;
-  //   final credential = GoogleAuthProvider.credential(
-  //     accessToken: googleAuth?.accessToken,
-  //     idToken: googleAuth?.idToken,
-  //   );
-  //   return await FirebaseAuth.instance.signInWithCredential(credential);
-  // }
-  final form_key = GlobalKey<FormState>();
-  String txt = "";
-  final email = TextEditingController();
-  final password = TextEditingController();
+  TextEditingController email = TextEditingController();
+  TextEditingController password = TextEditingController();
+  Future<void> signInWithEmailAndPassword(String email, String password) async {
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => TaiKhoan()),
+      );
+    } catch (e) {
+      print("Error during login: $e");
+    }
+  }
+
+  void _showSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        duration: Duration(seconds: 3),
+      ),
+    );
+  }
+
   bool obs = true;
   @override
   Widget build(BuildContext context) {
+    String txt = "";
+
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
         body: Form(
-          key: form_key,
           child: SingleChildScrollView(
             child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -66,11 +80,11 @@ class _SignInState extends State<SignIn> {
                                 BorderRadius.all(Radius.circular(20))),
                         contentPadding: EdgeInsets.symmetric(vertical: 15.0),
                         labelText: 'Email',
-                        hintText: 'Enter email',
+                        hintText: 'Nhập email',
                       ),
                       validator: (value) {
                         if (value == "") {
-                          return "email is not empty";
+                          return "email không trống";
                         }
                         return null;
                       },
@@ -92,8 +106,8 @@ class _SignInState extends State<SignIn> {
                           border: OutlineInputBorder(
                               borderRadius:
                                   BorderRadius.all(Radius.circular(20))),
-                          labelText: 'Password',
-                          hintText: 'Enter password',
+                          labelText: 'Mật khẩu',
+                          hintText: 'Nhập mật khẩu',
                           suffixIcon: IconButton(
                             icon: obs
                                 ? const Icon(Icons.visibility_off_rounded)
@@ -106,7 +120,7 @@ class _SignInState extends State<SignIn> {
                           )),
                       validator: (value) {
                         if (value == "") {
-                          return "Password is not empty";
+                          return "Mật khẩu không trống";
                         }
                         return null;
                       },
@@ -131,34 +145,7 @@ class _SignInState extends State<SignIn> {
                     style:
                         ElevatedButton.styleFrom(shape: const CircleBorder()),
                     onPressed: () {
-                      // if (form_key.currentState!.validate()) {
-                      //   if (username.text == password.text) {
-                      //     Navigator.popUntil(context, (route) => route.isFirst);
-                      //     Navigator.pushNamed(context, '/home');
-                      //   } else {
-                      //     txt = "Sign In failed";
-                      //   }
-                      // }
-                      //   if (form_key.currentState != null &&
-                      //       form_key.currentState!.validate()) {
-                      //     try {
-                      //       FirebaseAuth.instance
-                      //           signInWithEmailAndPassword(
-                      //               email: email.text, password: password.text)
-                      //           .then((value) {
-                      //         SignIn.pass = password.text;
-                      //         Navigator.pushNamed(context, '/home');
-                      //       }).onError((error, stackTrace) {
-                      //         print("Error ${error.toString()}");
-                      //       });
-                      //     } catch (e) {
-                      //       print("Error");
-                      //     }
-                      //   } else {
-                      //     setState(() {
-                      //       txt = "Please fill in all the fields";
-                      //     });
-                      //   }
+                      signInWithEmailAndPassword(email.text, password.text);
                     },
                     child: Container(
                       decoration: BoxDecoration(
@@ -192,12 +179,16 @@ class _SignInState extends State<SignIn> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        InkWell(
-                            onTap: () {},
+                        TextButton(
+                            onPressed: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) =>
+                                      const ChangePassword()));
+                            },
                             child: const Text(
                               "Quên mật khẩu",
                               style: TextStyle(
-                                  color: Colors.redAccent,
+                                  color: Colors.blueAccent,
                                   fontSize: 15,
                                   fontWeight: FontWeight.bold),
                             )),
@@ -210,19 +201,18 @@ class _SignInState extends State<SignIn> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         const Text(
-                          "No account? ",
+                          "Không tài khoản? ",
                           style: TextStyle(fontSize: 15),
                         ),
-                        InkWell(
-                          onTap: () {
-                            Navigator.popUntil(
-                                context, (route) => route.isFirst);
-                            Navigator.pushNamed(context, '/signup');
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => const SignUp()));
                           },
                           child: const Text(
-                            "Sign Up",
+                            "Đăng ký",
                             style: TextStyle(
-                                color: Colors.redAccent,
+                                color: Colors.blueAccent,
                                 fontSize: 15,
                                 fontWeight: FontWeight.bold),
                           ),

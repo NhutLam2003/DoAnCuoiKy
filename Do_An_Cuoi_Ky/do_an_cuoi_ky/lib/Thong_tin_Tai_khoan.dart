@@ -1,17 +1,30 @@
-// import 'package:firebase_auth/firebase_auth.dart';
-// import 'package:firebase_database/firebase_database.dart';
+import 'dart:html';
 
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class TaiKhoan extends StatefulWidget {
   const TaiKhoan({super.key});
+
 
   @override
   State<TaiKhoan> createState() => _TtTk();
 }
 
 class _TtTk extends State<TaiKhoan> {
-  // var username = FirebaseAuth.instance.currentUser?.displayName;
+  String? username = FirebaseAuth.instance.currentUser!.email;
+List<String> docIDs=[];
+Future getDocID() async{
+  await FirebaseFirestore.instance.collection('user').get().then(
+    (snapshot) => snapshot.docs.forEach((document) {
+      print(document.reference);
+      docIDs.add(document.reference.id);
+    },));
+}
   void _dangxuat() {
     showDialog(
         context: context,
@@ -95,34 +108,34 @@ class _TtTk extends State<TaiKhoan> {
                             TextButton(
                                 style: const ButtonStyle(),
                                 onPressed: () async {
-                                  // User? user =
-                                  //     FirebaseAuth.instance.currentUser;
+                                  User? user =
+                                      FirebaseAuth.instance.currentUser;
 
                                   // Kiểm tra xem người dùng có tồn tại không
-                                  // if (user != null) {
-                                  //   // Cập nhật display name
-                                  //   await user.updateDisplayName(
-                                  //       changeUsername.text);
-                                  //   // final DatabaseReference
-                                  //   //     databaseReference = FirebaseDatabase
-                                  //   //         .instance
-                                  //   //         .ref()
-                                  //   //         .child('/users');
+                                  if (user != null) {
+                                    //   // Cập nhật display name
+                                    await user?.updateDisplayName(
+                                        changeUsername.text);
+                                    //   // final DatabaseReference
+                                    //   //     databaseReference = FirebaseDatabase
+                                    //   //         .instance
+                                    //   //         .ref()
+                                    //   //         .child('/users');
 
-                                  //   // databaseReference
-                                  //   //
-                                  //   //     .update({
-                                  //   //   user.displayName!: changeUsername.text
-                                  //   // });
-                                  //   // In thông báo sau khi cập nhật thành công
-                                  //   print(
-                                  //       'Display Name updated successfully to: ${.displayName}');
-                                  // } else {
-                                  //   print('User is null');
-                                  // }
+                                    //   // databaseReference
+                                    //   //
+                                    //   //     .update({
+                                    //   //   user.displayName!: changeUsername.text
+                                    //   // });
+                                    //   // In thông báo sau khi cập nhật thành công
+                                    print(
+                                        'Display Name updated successfully to: ${user.displayName}');
+                                  } else {
+                                    print('User is null');
+                                  }
                                   Navigator.popAndPushNamed(context, '/home');
                                   setState(() {
-                                    // username = changeUsername.text;
+                                    username = changeUsername.text;
                                   });
                                 },
                                 child: const Text('Yes')),
@@ -130,14 +143,12 @@ class _TtTk extends State<TaiKhoan> {
                         );
                       });
                 },
-                child: const Padding(
+                child: Padding(
                   padding: EdgeInsets.only(top: 10),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(
-                          //username.toString()
-                          "TAM HUYNH",
+                      Text(username!,
                           style: TextStyle(
                               fontSize: 28, fontWeight: FontWeight.bold)),
                       Icon(Icons.edit),
@@ -169,15 +180,6 @@ class _TtTk extends State<TaiKhoan> {
             ],
           )),
         ),
-        // ListTile(
-        //   title: Text("Log out"),
-        //   leading: Icon(Icons.logout),
-        //   onTap: () {
-        //     // FirebaseAuth.instance.signOut().then((value) {
-        //     //   Navigator.pushNamed(context, '/signin');
-        //     // });
-        //   },
-        // )
         Container(
           height: 100,
           child: Row(
@@ -232,7 +234,6 @@ class _TtTk extends State<TaiKhoan> {
             ],
           ),
         ),
-
         Container(
           height: 100,
           child: Row(
@@ -264,5 +265,11 @@ class _TtTk extends State<TaiKhoan> {
         ),
       ],
     );
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(StringProperty('username', username));
   }
 }
