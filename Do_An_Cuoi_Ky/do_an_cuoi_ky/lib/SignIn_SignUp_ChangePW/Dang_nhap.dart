@@ -7,6 +7,7 @@ import 'Quen_mat_khau.dart';
 
 class SignIn extends StatefulWidget {
   const SignIn({super.key});
+   static String pass = "";
   @override
   State<SignIn> createState() => _SignInState();
 }
@@ -108,6 +109,7 @@ class _SignInState extends State<SignIn> {
                                   BorderRadius.all(Radius.circular(20))),
                           labelText: 'Mật khẩu',
                           hintText: 'Nhập mật khẩu',
+                          
                           suffixIcon: IconButton(
                             icon: obs
                                 ? const Icon(Icons.visibility_off_rounded)
