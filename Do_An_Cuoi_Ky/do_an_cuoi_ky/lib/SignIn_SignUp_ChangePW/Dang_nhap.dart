@@ -1,13 +1,12 @@
 import 'package:do_an_cuoi_ky/Thong_tin_Tai_khoan.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-// import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter/material.dart';
 import 'Dang_ky.dart';
 import 'Quen_mat_khau.dart';
 
 class SignIn extends StatefulWidget {
   const SignIn({super.key});
-   static String pass = "";
+  static String pass = "";
   @override
   State<SignIn> createState() => _SignInState();
 }
@@ -22,7 +21,7 @@ class _SignInState extends State<SignIn> {
         password: password,
       );
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => TaiKhoan()),
+        MaterialPageRoute(builder: (context) => const TaiKhoan()),
       );
     } catch (e) {
       print("Error during login: $e");
@@ -33,7 +32,7 @@ class _SignInState extends State<SignIn> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
-        duration: Duration(seconds: 3),
+        duration: const Duration(seconds: 3),
       ),
     );
   }
@@ -51,13 +50,21 @@ class _SignInState extends State<SignIn> {
             child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Container(
-                    child: CircleAvatar(
-                      backgroundImage: AssetImage(
-                        'assets/logo.jpg',
+                  const SizedBox(
+                    height: 50,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        child: const CircleAvatar(
+                          backgroundImage: AssetImage(
+                            'assets/logo.jpg',
+                          ),
+                          radius: 20,
+                        ),
                       ),
-                      radius: 50,
-                    ),
+                    ],
                   ),
                   Container(
                     alignment: Alignment.center,
@@ -91,7 +98,7 @@ class _SignInState extends State<SignIn> {
                       },
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 50,
                   ),
                   Container(
@@ -104,12 +111,11 @@ class _SignInState extends State<SignIn> {
                           fillColor: Colors.grey[300],
                           contentPadding:
                               const EdgeInsets.symmetric(vertical: 15.0),
-                          border: OutlineInputBorder(
+                          border: const OutlineInputBorder(
                               borderRadius:
                                   BorderRadius.all(Radius.circular(20))),
                           labelText: 'Mật khẩu',
                           hintText: 'Nhập mật khẩu',
-                          
                           suffixIcon: IconButton(
                             icon: obs
                                 ? const Icon(Icons.visibility_off_rounded)
@@ -136,7 +142,7 @@ class _SignInState extends State<SignIn> {
                     children: [
                       Text(
                         txt,
-                        style: TextStyle(color: Colors.red, fontSize: 15),
+                        style: const TextStyle(color: Colors.red, fontSize: 15),
                       )
                     ],
                   ),

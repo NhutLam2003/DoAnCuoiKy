@@ -1,4 +1,3 @@
-import 'package:do_an_cuoi_ky/SignIn_SignUp_ChangePW/Dang_nhap.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -12,10 +11,10 @@ class ChangePassword extends StatefulWidget {
 class _ChangePasswordState extends State<ChangePassword> {
   @override
   Widget build(BuildContext context) {
-    final FirebaseAuth _auth = FirebaseAuth.instance;
-    final User? currentUser = _auth.currentUser;
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final User? currentUser = auth.currentUser;
     final TextEditingController email = TextEditingController();
-    String password = SignIn.pass;
+    // String password = SignIn.pass;
 
     return Scaffold(
         appBar: AppBar(
@@ -23,7 +22,7 @@ class _ChangePasswordState extends State<ChangePassword> {
           title: const Text("Quên mật khẩu"),
           leading: IconButton(
               onPressed: () {
-                Navigator.popAndPushNamed(context, '/home');
+                Navigator.popAndPushNamed(context, '/SignIn');
               },
               icon: const Icon(Icons.arrow_back)),
         ),
@@ -33,11 +32,12 @@ class _ChangePasswordState extends State<ChangePassword> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Row(children: [
-                  Text("Vui lòng nhập email để nhận link đổi mật khẩu ! "),
-                ]),
-                const SizedBox(
-                  height: 16.0,
+                const Row(
+                  children: [
+                    Expanded(
+                        child: Text(
+                            "Vui lòng nhập email để nhận link đổi mật khẩu !")),
+                  ],
                 ),
                 const SizedBox(
                   height: 8,
@@ -60,9 +60,6 @@ class _ChangePasswordState extends State<ChangePassword> {
                 const SizedBox(
                   height: 8,
                 ),
-                const SizedBox(
-                  height: 10,
-                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -71,7 +68,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10.0),
                           ),
-                          padding: EdgeInsets.symmetric(
+                          padding: const EdgeInsets.symmetric(
                               vertical: 15, horizontal: 40),
                           backgroundColor: Colors.lightBlue[200]),
                       onPressed: () {
@@ -81,15 +78,12 @@ class _ChangePasswordState extends State<ChangePassword> {
                         Navigator.pop(context);
                         Navigator.pushReplacementNamed(context, '/');
                       },
-                      child: Text(
+                      child: const Text(
                         "Gửi",
                         style: TextStyle(fontSize: 16, color: Colors.white),
                       ),
                     )
                   ],
-                ),
-                const SizedBox(
-                  height: 30,
                 ),
               ],
             ),
@@ -98,32 +92,32 @@ class _ChangePasswordState extends State<ChangePassword> {
   }
 }
 
-showalert(BuildContext context, String content, void Function() callback) {
-  return showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text(
-            "Thông báo",
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
-          actions: [
-            TextButton(
-                onPressed: () {
-                  callback();
-                },
-                child: const Text('OK')),
-          ],
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(Icons.warning, size: 70),
-              Padding(
-                padding: const EdgeInsets.only(top: 10.0),
-                child: Text(content),
-              ),
-            ],
-          ),
-        );
-      });
-}
+// showalert(BuildContext context, String content, void Function() callback) {
+//   return showDialog(
+//       context: context,
+//       builder: (context) {
+//         return AlertDialog(
+//           title: Text(
+//             "Thông báo",
+//             style: TextStyle(fontWeight: FontWeight.bold),
+//           ),
+//           actions: [
+//             TextButton(
+//                 onPressed: () {
+//                   callback();
+//                 },
+//                 child: const Text('OK')),
+//           ],
+//           content: Column(
+//             mainAxisSize: MainAxisSize.min,
+//             children: [
+//               Icon(Icons.warning, size: 70),
+//               Padding(
+//                 padding: const EdgeInsets.only(top: 10.0),
+//                 child: Text(content),
+//               ),
+//             ],
+//           ),
+//         );
+//       });
+// }

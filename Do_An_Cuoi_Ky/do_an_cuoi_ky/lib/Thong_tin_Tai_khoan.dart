@@ -1,30 +1,16 @@
-import 'dart:html';
-
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class TaiKhoan extends StatefulWidget {
   const TaiKhoan({super.key});
 
-
   @override
   State<TaiKhoan> createState() => _TtTk();
 }
 
 class _TtTk extends State<TaiKhoan> {
-  String? username = FirebaseAuth.instance.currentUser!.email;
-List<String> docIDs=[];
-Future getDocID() async{
-  await FirebaseFirestore.instance.collection('user').get().then(
-    (snapshot) => snapshot.docs.forEach((document) {
-      print(document.reference);
-      docIDs.add(document.reference.id);
-    },));
-}
   void _dangxuat() {
     showDialog(
         context: context,
@@ -37,28 +23,29 @@ Future getDocID() async{
                 onPressed: () {
                   Navigator.pop(context);
                 },
-                child: Text("Huỷ"),
+                child: const Text("Huỷ"),
               ),
               MaterialButton(
                 onPressed: () {},
-                child: Text("Đồng ý"),
+                child: const Text("Đồng ý"),
               ),
             ],
           );
         });
   }
 
-  var changeUsername = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    var username = FirebaseAuth.instance.currentUser?.displayName;
+    var changeUsername = TextEditingController();
     return Column(
       children: [
         AppBar(
           backgroundColor: Colors.grey,
           centerTitle: true,
-          title: Text("Thông tin tài khoản"),
+          title: const Text("Thông tin tài khoản"),
           leading: IconButton(
-            icon: Icon(Icons.arrow_back),
+            icon: const Icon(Icons.arrow_back),
             onPressed: () {},
           ),
         ),
@@ -114,29 +101,15 @@ Future getDocID() async{
                                   // Kiểm tra xem người dùng có tồn tại không
                                   if (user != null) {
                                     //   // Cập nhật display name
-                                    await user?.updateDisplayName(
-                                        changeUsername.text);
-                                    //   // final DatabaseReference
-                                    //   //     databaseReference = FirebaseDatabase
-                                    //   //         .instance
-                                    //   //         .ref()
-                                    //   //         .child('/users');
-
-                                    //   // databaseReference
-                                    //   //
-                                    //   //     .update({
-                                    //   //   user.displayName!: changeUsername.text
-                                    //   // });
-                                    //   // In thông báo sau khi cập nhật thành công
+                                    await user
+                                        .updateDisplayName(changeUsername.text);
                                     print(
                                         'Display Name updated successfully to: ${user.displayName}');
                                   } else {
                                     print('User is null');
                                   }
-                                  Navigator.popAndPushNamed(context, '/home');
-                                  setState(() {
-                                    username = changeUsername.text;
-                                  });
+                                  Navigator.pop(context);
+                                  setState(() {});
                                 },
                                 child: const Text('Yes')),
                           ],
@@ -144,28 +117,28 @@ Future getDocID() async{
                       });
                 },
                 child: Padding(
-                  padding: EdgeInsets.only(top: 10),
+                  padding: const EdgeInsets.only(top: 10),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(username!,
-                          style: TextStyle(
+                      Text(username.toString(),
+                          style: const TextStyle(
                               fontSize: 28, fontWeight: FontWeight.bold)),
                       Icon(Icons.edit),
                     ],
                   ),
                 ),
-              )
+              ),
             ],
           ),
         ),
         MaterialButton(
           onPressed: () {
             Navigator.popUntil(context, (route) => route.isFirst);
-            Navigator.pushNamed(context, '/change-password');
+            Navigator.pushNamed(context, '/ChangePassword');
           },
           child: Container(
-              child: Row(
+              child: const Row(
             children: [
               Icon(
                 Icons.edit,
@@ -180,7 +153,7 @@ Future getDocID() async{
             ],
           )),
         ),
-        Container(
+        SizedBox(
           height: 100,
           child: Row(
             children: [
@@ -207,7 +180,7 @@ Future getDocID() async{
             ],
           ),
         ),
-        Container(
+        SizedBox(
           height: 100,
           child: Row(
             children: [
@@ -234,7 +207,7 @@ Future getDocID() async{
             ],
           ),
         ),
-        Container(
+        SizedBox(
           height: 100,
           child: Row(
             children: [
@@ -265,11 +238,5 @@ Future getDocID() async{
         ),
       ],
     );
-  }
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties.add(StringProperty('username', username));
   }
 }

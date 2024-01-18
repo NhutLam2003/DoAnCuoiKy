@@ -1,7 +1,6 @@
-import 'package:do_an_cuoi_ky/SignIn_SignUp_ChangePW/Dang_nhap.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class SignUp extends StatefulWidget {
@@ -30,12 +29,28 @@ class _SignUpState extends State<SignUp> {
     }
   }
 
+  final CollectionReference usersRef =
+      FirebaseFirestore.instance.collection('user');
+  Future<void> createOrder(User user) async {
+    try {
+      Map<String, dynamic> UserMap = {
+        'email': user.email,
+        'username': user.displayName,
+      };
+      await FirebaseFirestore.instance.collection('orders').add(UserMap);
+      print('User tạo thành công!');
+      Navigator.pop(context);
+    } catch (e) {
+      print('Lỗi khi tạo User: $e');
+    }
+  }
+
   bool obs = true;
   void _showSnackBar(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
-        duration: Duration(seconds: 3),
+        duration: const Duration(seconds: 3),
       ),
     );
   }
@@ -50,13 +65,21 @@ class _SignUpState extends State<SignUp> {
             child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Container(
-                    child: CircleAvatar(
-                      backgroundImage: AssetImage(
-                        'assets/logo.jpg',
+                  const SizedBox(
+                    height: 50,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        child: const CircleAvatar(
+                          backgroundImage: AssetImage(
+                            'assets/logo.jpg',
+                          ),
+                          radius: 20,
+                        ),
                       ),
-                      radius: 50,
-                    ),
+                    ],
                   ),
                   Container(
                     alignment: Alignment.center,
@@ -117,7 +140,7 @@ class _SignUpState extends State<SignUp> {
                       controller: password,
                       obscureText: obs,
                       decoration: InputDecoration(
-                          border: OutlineInputBorder(
+                          border: const OutlineInputBorder(
                               borderRadius:
                                   BorderRadius.all(Radius.circular(20))),
                           contentPadding:
@@ -148,7 +171,7 @@ class _SignUpState extends State<SignUp> {
                       controller: confirmPassword,
                       obscureText: obs,
                       decoration: InputDecoration(
-                          border: OutlineInputBorder(
+                          border: const OutlineInputBorder(
                               borderRadius:
                                   BorderRadius.all(Radius.circular(20))),
                           contentPadding:
@@ -182,7 +205,7 @@ class _SignUpState extends State<SignUp> {
                     children: [
                       Text(
                         txt,
-                        style: TextStyle(color: Colors.red, fontSize: 15),
+                        style: const TextStyle(color: Colors.red, fontSize: 15),
                       )
                     ],
                   ),
@@ -196,8 +219,17 @@ class _SignUpState extends State<SignUp> {
                       if (password.text == confirmPassword.text) {
                         if (password.text.length >= 6) {
                           registerWithEmailAndPassword(
-                              email.text, password.text);
-                        
+                                  email.text, password.text)
+                              .then((value) {
+                            FirebaseAuth.instance.currentUser
+                                ?.updateDisplayName(username.text);
+                            DatabaseReference ref =
+                                FirebaseDatabase.instance.ref();
+                            ref.child("users").update({username.text: ""});
+                          }).onError((error, stackTrace) {
+                            print("Error ${error.toString()}");
+                          });
+
                           Navigator.pop(context);
                         } else {
                           _showSnackBar("Mất khẩu phải 6 kí tự trở lên");
