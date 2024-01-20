@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../data.dart';
-import '../models/item_list.dart';
+import '../services/data.dart';
+import '../models/model_item_list.dart';
 class TinTuc extends StatefulWidget {
   const TinTuc({super.key,required this.link_rss});
   final String link_rss;
@@ -31,8 +31,9 @@ class _TinTucState extends State<TinTuc> {
           var newsItem = newsList[index];
           var title = newsItem['title'];
           var imageLink = newsItem['image'];
-
-          return CustomItem_List(img: imageLink.toString(), title: title.toString());
+          var link = newsItem['link'];
+          print(link);
+          return CustomItem_List(img: imageLink.toString(), title: title.toString(),link: link.toString(),);
         },
       ),
     );

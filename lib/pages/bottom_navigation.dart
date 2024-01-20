@@ -1,7 +1,7 @@
 
 import 'package:flutter/material.dart';
-import 'video.dart';
-import 'home.dart';
+import 'pages_video.dart';
+import 'pages_home.dart';
 class Bottom_Navigation extends StatefulWidget {
   const Bottom_Navigation({super.key});
 
