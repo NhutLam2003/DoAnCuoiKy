@@ -1,5 +1,7 @@
 import 'package:do_an_cuoi_ky/SignIn_SignUp_ChangePW/Dang_nhap.dart';
+import 'package:do_an_cuoi_ky/Thong_tin_Tai_khoan.dart';
 import 'package:do_an_cuoi_ky/firebase_options.dart';
+import 'package:do_an_cuoi_ky/man_hinh/Tien_Ich.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 
@@ -21,7 +23,12 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const SignIn(),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => TaiKhoan(),
+        '/Tienich': (context) => Tienich(),
+        '/SignIn': (context) => SignIn(),
+      },
     );
   }
 }

@@ -43,11 +43,16 @@ dependencies:
   email_validator: ^2.1.17
   firebase_messaging: ^14.7.6
   rxdart: ^0.27.7
+  http: ^1.2.0
+  table_calendar: ^3.0.9
+  flutter_html: ^2.2.1
+  flutter_rating_bar: ^4.0.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
+  shared_preferences: ^2.0.12
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
   # activated in the `analysis_options.yaml` file located at the root of your
@@ -70,6 +75,8 @@ flutter:
   assets:
     - assets/user.png
     - assets/logo.jpg
+    - assets/lich.png
+    - assets/thoitiet.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

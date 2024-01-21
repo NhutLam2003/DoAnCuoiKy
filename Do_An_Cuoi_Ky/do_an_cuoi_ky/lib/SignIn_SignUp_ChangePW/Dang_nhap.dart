@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'Dang_ky.dart';
 import 'Quen_mat_khau.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
 class SignIn extends StatefulWidget {
   const SignIn({super.key});
   static String pass = "";
@@ -152,8 +152,12 @@ class _SignInState extends State<SignIn> {
                   ElevatedButton(
                     style:
                         ElevatedButton.styleFrom(shape: const CircleBorder()),
-                    onPressed: () {
+                    onPressed: () async {
                       signInWithEmailAndPassword(email.text, password.text);
+                       final SharedPreferences prefs = await SharedPreferences.getInstance();
+                        prefs.setString('email', email.text);
+                        prefs.setString('password', password.text);
+                        prefs.setBool('isLoggedIn', true);
                     },
                     child: Container(
                       decoration: BoxDecoration(
