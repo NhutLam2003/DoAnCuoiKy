@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
-import '../models/model_item_list.dart';
+import 'package:url_launcher/url_launcher.dart';
+import '../mau/mau_pt_danh_sach.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import '../services/data.dart';
-import '../models/model_item_list.dart';
 class Tin_Nong extends StatefulWidget {
   const Tin_Nong({super.key});
 
@@ -59,8 +59,9 @@ class _Tin_NongState extends State<Tin_Nong> {
               var item = newsList[index];
               String? name = item['title'];
               String? img = item['image'];
+              String? link = item['link'];
               //print("img: ${img}");
-              return Item(img!, index, name.toString());
+              return Item(img!, index, name.toString(),link.toString());
             }, // các phần tử được thêm vào Carousel
             options: CarouselOptions(
                 height: 180, // Chiều cao của Carousel
@@ -121,7 +122,7 @@ class _Tin_NongState extends State<Tin_Nong> {
                 String? title = item['title'];
                 String? imgUrl = item['image'];
                 String? link = item['link'];
-                print('link ${link}');
+                //print('link ${link}');
                 return CustomItem_List(img: imgUrl.toString(), title: title.toString(),link:link.toString());
               })
           ///////////////////////////////////////////////////////////
@@ -131,7 +132,7 @@ class _Tin_NongState extends State<Tin_Nong> {
   }
 
   //// tạo Item cho phần đọc nhiều
-  Widget Item(String img, int index, String name){ 
+  Widget Item(String img, int index, String name,String link){ 
     final defaultIcon = Icon(Icons.photo_size_select_actual,color: Colors.black87,);
     final imgWidget = (img!= null && img.isNotEmpty)? Image.network(
               img,
@@ -140,26 +141,34 @@ class _Tin_NongState extends State<Tin_Nong> {
               height: 250,
             ):defaultIcon;
 
-    return Container(
-        margin: EdgeInsets.symmetric(horizontal: 5.0),
-        child: Stack(children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(15),
-            child: imgWidget
-          ),
-          Container(
-            padding: EdgeInsets.only(left: 10),
-            height: 250,
-            margin: const EdgeInsets.only(top: 150),
-            width: MediaQuery.of(context).size.width,
-            decoration: const BoxDecoration(
-              color: Colors.black26,
-              borderRadius: BorderRadius.only(bottomLeft: Radius.circular(15),bottomRight: Radius.circular(15))
+    return GestureDetector(
+      child: Container(
+          margin: EdgeInsets.symmetric(horizontal: 5.0),
+          child: Stack(children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(15),
+              child: imgWidget
             ),
-            child: Text(name,style: TextStyle(color: Colors.white,fontSize: 15,fontWeight: FontWeight.bold,overflow: TextOverflow.ellipsis  ),),
-          )
-        ]),
-      );
+            Container(
+              padding: EdgeInsets.only(left: 10),
+              height: 250,
+              margin: const EdgeInsets.only(top: 150),
+              width: MediaQuery.of(context).size.width,
+              decoration: const BoxDecoration(
+                color: Colors.black26,
+                borderRadius: BorderRadius.only(bottomLeft: Radius.circular(15),bottomRight: Radius.circular(15))
+              ),
+              child: Text(name,style: TextStyle(color: Colors.white,fontSize: 15,fontWeight: FontWeight.bold,overflow: TextOverflow.ellipsis  ),),
+            )
+          ]),
+        ),
+      onTap: () async{
+        Uri url = Uri.parse(link);
+        if(await canLaunchUrl(url)){
+          await launchUrl(url);
+        }
+      },
+    );
 }
 }
 
